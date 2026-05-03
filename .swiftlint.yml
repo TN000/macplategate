@@ -1,0 +1,49 @@
+# SwiftLint baseline config — krok #7 audit roadmap (2026-04-30).
+#
+# Strategie: WARNING-ONLY pro hot-path safety rules. Historický kód neprošel
+# initial cleanup, tj. strict mode by zablokoval každý build na force_unwrap
+# v existing kódu. Místo toho:
+#   - nový kód: PR review by mělo flagnout warnings
+#   - historický kód: postupně cleanup na opportunistic basis
+#
+# Až bude force_unwrapping count = 0 (po hot-path cleanup), přepneme rule
+# na `severity: error`.
+
+disabled_rules:
+  - line_length
+  - file_length
+  - type_body_length
+  - function_body_length
+  - cyclomatic_complexity
+  - identifier_name
+  - trailing_whitespace
+  - large_tuple
+  - todo
+
+opt_in_rules:
+  - force_unwrapping
+  - implicitly_unwrapped_optional
+  - empty_count
+  - empty_string
+  - first_where
+  - last_where
+  - operator_usage_whitespace
+  - sorted_first_last
+  - toggle_bool
+  - unused_optional_binding
+  - vertical_parameter_alignment_on_call
+
+excluded:
+  - .build
+  - build
+  - Tests
+  - Sources/SPZApp/UI/StreamView.swift   # 4586 LOC, plánován samostatný split
+  - Sources/SPZApp/UI/SettingsView.swift # 1895 LOC, dtto
+
+force_unwrapping:
+  severity: warning
+implicitly_unwrapped_optional:
+  severity: warning
+
+# Reportér se hodí do build_app.sh — nezablokujeme build, jen produkujeme tail
+reporter: emoji

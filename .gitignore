@@ -1,0 +1,42 @@
+# Swift / Xcode
+.build/
+.swiftpm/
+.DS_Store
+xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+*.xcuserstate
+DerivedData/
+
+# Application user data (must NEVER be committed)
+*.app/
+build/
+
+# ONNX models — installed via scripts/install_models.sh
+Sources/SPZApp/Resources/*.onnx
+Sources/SPZApp/Resources/*.onnx.lock
+
+# Local config samples (users keep their own copies in ~/Library/Application Support/MacPlateGate/)
+*.local.json
+settings.local.json
+known.local.json
+cameras.local.json
+
+# Logs / runtime artifacts
+*.log
+audit.jsonl*
+detections.db*
+manual-prujezdy/
+replay-results/
+replay-overrides.jsonl
+
+# Editor
+.idea/
+.vscode/
+*.swp
+*~
+
+# Python tooling
+__pycache__/
+*.pyc
+.venv/
+.python-version
