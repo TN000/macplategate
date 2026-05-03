@@ -15,12 +15,7 @@ struct SPZApp: App {
     /// rotating log v App Support tak aby problémy hned po rebootu (kdy ještě
     /// nepoběží Console nebo `log show`) šly dohledat z disku.
     static let stderrRedirect: Void = {
-        let fm = FileManager.default
-        let base = fm.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
-            ?? fm.homeDirectoryForCurrentUser
-        let dir = base.appendingPathComponent("SPZ", isDirectory: true)
-        try? fm.createDirectory(at: dir, withIntermediateDirectories: true)
-        try? fm.setAttributes([.posixPermissions: 0o700], ofItemAtPath: dir.path)
+        let dir = AppPaths.baseDir
         let logURL = dir.appendingPathComponent("spz.log")
         rotateLogIfNeeded(at: logURL)
         // freopen na "a" = append; bez buffering na stderr (setvbuf line-buffered)
@@ -31,7 +26,7 @@ struct SPZApp: App {
         // freopen s default umask dal 0644 world-readable; fchmod to opravuje.
         _ = fchmod(fileno(stderr), 0o600)
         let ts = ISO8601DateFormatter().string(from: Date())
-        FileHandle.safeStderrWrite("\n=== SPZ launch @ \(ts) ===\n".data(using: .utf8)!)
+        FileHandle.safeStderrWrite("\n=== MacPlateGate launch @ \(ts) ===\n".data(using: .utf8)!)
     }()
 
     static func rotateLogIfNeeded(at logURL: URL) {
@@ -61,16 +56,13 @@ struct SPZApp: App {
     @MainActor private static func startLogRotationTimer() {
         logRotationTimer?.invalidate()
         logRotationTimer = Timer.scheduledTimer(withTimeInterval: 300, repeats: true) { _ in
-            let fm = FileManager.default
-            let base = fm.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
-                ?? fm.homeDirectoryForCurrentUser
-            let logURL = base.appendingPathComponent("SPZ/spz.log")
+            let logURL = AppPaths.baseDir.appendingPathComponent("spz.log")
             SPZApp.rotateLogIfNeeded(at: logURL)
         }
     }
 
     var body: some Scene {
-        WindowGroup("SPZ · ALPR") {
+        WindowGroup("MacPlateGate") {
             ContentView()
                 .environmentObject(state)
                 .environmentObject(cameras)

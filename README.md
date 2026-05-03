@@ -163,7 +163,9 @@ bash scripts/build_app.sh
 swift run -c release
 ```
 
-First launch creates `~/Library/Application Support/MacPlateGate/` (kept private, perms 0600). All settings, the whitelist, the SQLite DB, audit log, and snapshots live there.
+First launch creates `~/Library/Application Support/MacPlateGate/` (kept private, perms 0600). All settings, the whitelist, the SQLite DB, audit log, and snapshots live there. If you upgraded from a pre-rebrand build that used `~/Library/Application Support/SPZ/`, the directory is renamed automatically the first time the new binary launches.
+
+On first launch you'll see a **welcome sheet with a randomly-generated admin password** — copy it, click "Continue to login", paste it. The first thing to do once logged in is **Settings → Security → change password**. The initial password file (`admin-initial-password.txt`) is wiped from disk the moment you change it.
 
 Configure cameras + Shelly devices in **Settings**. The web UI is off by default — turn it on under **Settings → Network**.
 

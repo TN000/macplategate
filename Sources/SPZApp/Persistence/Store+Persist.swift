@@ -97,7 +97,7 @@ extension Store {
                 Task { @MainActor in
                     ErrorNotifier.fire(.sqliteError,
                                        title: "Databáze: chyba zápisu",
-                                       body: "SQLite vrátil chybu (\(errMsg)). Zkontroluj volné místo a perms na ~/Library/Application Support/SPZ/")
+                                       body: "SQLite vrátil chybu (\(errMsg)). Zkontroluj volné místo a perms na ~/Library/Application Support/MacPlateGate/")
                 }
             }
         }

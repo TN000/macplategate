@@ -17,15 +17,7 @@ import Security
 /// **Pozor:** Prohlížeče varují na self-signed cert — user musí kliknout
 /// "Advanced → Pokračovat" při prvním navštívení. Jednorázově.
 enum CertManager {
-    private static var baseDir: URL {
-        let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
-            ?? FileManager.default.homeDirectoryForCurrentUser
-        let dir = base.appendingPathComponent("SPZ", isDirectory: true)
-        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
-        try? FileManager.default.setAttributes(
-            [.posixPermissions: 0o700], ofItemAtPath: dir.path)
-        return dir
-    }
+    private static var baseDir: URL { AppPaths.baseDir }
     private static var keyURL: URL { baseDir.appendingPathComponent("webserver-key.pem") }
     private static var certURL: URL { baseDir.appendingPathComponent("webserver-cert.pem") }
     private static var p12URL: URL { baseDir.appendingPathComponent("webserver.p12") }

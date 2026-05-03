@@ -4,20 +4,15 @@ import CryptoKit
 
 /// Admin autentizace + session management.
 ///
-/// **Storage:** lokální soubory v `~/Library/Application Support/SPZ/` s perms 600.
-/// Keychain je vyloučen, protože adhoc-signed app trigguje opakované ACL prompty
-/// ("Enter your Mac password to allow...") u každé položky. Threat model
-/// (local-only Mac mini) Keychain ACL nepotřebuje; 600-perm soubor dává stejnou
-/// ochranu proti jiným userům na stroji.
+/// **Storage:** lokální soubory v `AppPaths.baseDir` s perms 600. Keychain
+/// je vyloučen, protože adhoc-signed app trigguje opakované ACL prompty u každé
+/// položky. Threat model (local-only Mac) Keychain ACL nepotřebuje; 600-perm
+/// soubor dává stejnou ochranu proti jiným userům na stroji.
 @MainActor
 final class Auth: ObservableObject {
     static let shared = Auth()
 
-    private static var baseDir: URL {
-        let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
-            ?? FileManager.default.homeDirectoryForCurrentUser
-        return base.appendingPathComponent("SPZ", isDirectory: true)
-    }
+    private static var baseDir: URL { AppPaths.baseDir }
     private static var hashFileURL: URL { baseDir.appendingPathComponent("admin-hash.dat") }
     private static var rememberFileURL: URL { baseDir.appendingPathComponent("admin-remember.dat") }
 
@@ -127,6 +122,19 @@ final class Auth: ObservableObject {
         if FileManager.default.fileExists(atPath: url.path) {
             try? FileManager.default.removeItem(at: url)
         }
+    }
+
+    /// Vrátí počáteční heslo vygenerované při prvním spuštění, pokud soubor
+    /// `admin-initial-password.txt` ještě existuje (= user heslo nezměnil).
+    /// Použito v `WelcomeSheet` pro zobrazení hesla na first-run obrazovce.
+    func readInitialPasswordIfExists() -> String? {
+        let url = Self.initialPasswordFileURL
+        guard FileManager.default.fileExists(atPath: url.path),
+              let data = try? Data(contentsOf: url),
+              let text = String(data: data, encoding: .utf8) else { return nil }
+        let lines = text.split(separator: "\n", omittingEmptySubsequences: true)
+            .map { String($0) }
+        return lines.last
     }
 
     /// Ověří heslo proti uloženému hashi. Constant-time compare.

@@ -16,7 +16,7 @@ struct LogViewerSheet: View {
                 VStack(alignment: .leading, spacing: 3) {
                     Text("APLIKAČNÍ LOG").font(.system(size: 10, weight: .bold)).tracking(1.5)
                         .foregroundStyle(.secondary)
-                    Text("~/Library/Application Support/SPZ/spz.log")
+                    Text("~/Library/Application Support/MacPlateGate/spz.log")
                         .font(.system(size: 10, design: .monospaced))
                         .foregroundStyle(.secondary)
                 }

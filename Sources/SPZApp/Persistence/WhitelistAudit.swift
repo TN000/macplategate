@@ -28,13 +28,7 @@ enum WhitelistAudit {
     }
 
     private static var logURL: URL {
-        let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
-            ?? FileManager.default.homeDirectoryForCurrentUser
-        let dir = base.appendingPathComponent("SPZ", isDirectory: true)
-        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
-        try? FileManager.default.setAttributes(
-            [.posixPermissions: 0o700], ofItemAtPath: dir.path)
-        return dir.appendingPathComponent("whitelist-audit.log")
+        AppPaths.baseDir.appendingPathComponent("whitelist-audit.log")
     }
 
     /// Thread-safe append — serializuje zápisy mezi potenciálními volajícími

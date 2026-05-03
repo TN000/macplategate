@@ -67,10 +67,7 @@ enum ReplayCLI {
         }
 
         // Resolve paths (defaults).
-        let appSupport = (FileManager.default.urls(for: .applicationSupportDirectory,
-                                                    in: .userDomainMask).first
-            ?? FileManager.default.homeDirectoryForCurrentUser)
-            .appendingPathComponent("SPZ", isDirectory: true)
+        let appSupport = AppPaths.baseDir
         let snapshotsDir = appSupport.appendingPathComponent("snapshots", isDirectory: true)
         let dbPath = appSupport.appendingPathComponent("detections.db")
         let overridesPath = ReplayOverrideStore.defaultURL

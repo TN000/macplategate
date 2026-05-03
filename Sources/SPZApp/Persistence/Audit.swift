@@ -41,13 +41,7 @@ enum Audit {
     private static var ribbonActive: Bool = false
 
     private static var logURL: URL {
-        let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
-            ?? FileManager.default.homeDirectoryForCurrentUser
-        let dir = base.appendingPathComponent("SPZ", isDirectory: true)
-        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
-        try? FileManager.default.setAttributes(
-            [.posixPermissions: 0o700], ofItemAtPath: dir.path)
-        return dir.appendingPathComponent("audit.jsonl")
+        AppPaths.baseDir.appendingPathComponent("audit.jsonl")
     }
 
     /// Zapíše jeden event. Klíče `ts` a `event` jsou injekované, ostatní z `fields`.

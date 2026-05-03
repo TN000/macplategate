@@ -7,6 +7,8 @@ struct ContentView: View {
     /// Akce k provedení po úspěšném loginu (např. přepnutí na Settings). Nil =
     /// prostý login přes horní tlačítko, žádná follow-up akce.
     @State private var pendingAfterLogin: (() -> Void)? = nil
+    @State private var showWelcomeSheet: Bool = false
+    @State private var welcomeInitialPassword: String? = nil
 
     enum Tab: String, CaseIterable, Identifiable {
         case stream = "Živě"
@@ -68,6 +70,15 @@ struct ContentView: View {
                 }
             )
         }
+        .sheet(isPresented: $showWelcomeSheet) {
+            WelcomeSheet(
+                initialPassword: welcomeInitialPassword ?? "",
+                onContinue: {
+                    showWelcomeSheet = false
+                    showLoginPrompt = true
+                }
+            )
+        }
         .onChange(of: state.isLoggedIn) { _, loggedIn in
             // Při odhlášení automaticky opustit Settings tab + smazat
             // zapamatované heslo (explicit logout = user chce end session).
@@ -81,6 +92,12 @@ struct ContentView: View {
             // "Zapamatovat", vytáhni uložené heslo a pusť do stavu.
             if !state.isLoggedIn, Auth.shared.recallPassword() != nil {
                 state.isLoggedIn = true
+            } else if !state.isLoggedIn,
+                      let initial = Auth.shared.readInitialPasswordIfExists() {
+                // First-run: heslo nebylo nikdy změněno → ukaž ho user-friendly
+                // místo aby ho hledal v admin-initial-password.txt na disku.
+                welcomeInitialPassword = initial
+                showWelcomeSheet = true
             }
             // Spustí Shelly health probe na app-level (ne per-tab) — header
             // bar zobrazuje status + teplotu vždy, takže probe musí běžet

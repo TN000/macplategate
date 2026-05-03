@@ -137,7 +137,7 @@ struct DetectionSection: View {
                       isOn: $state.usePlateSuperResolution)
             Divider().background(Color.white.opacity(0.06))
             ToggleRow("Vývojářské logy (verbose trace)",
-                      hint: "Podrobný per-frame log do ~/Library/Application Support/SPZ/spz.log — preprocess luminance, Vision timing, obs count, normalizer raw/basic text, motion detection, vehicle color sample RGB atd. ~20 MB/hodinu log IO, VYPNOUT v produkci.",
+                      hint: "Podrobný per-frame log do ~/Library/Application Support/MacPlateGate/spz.log — preprocess luminance, Vision timing, obs count, normalizer raw/basic text, motion detection, vehicle color sample RGB atd. ~20 MB/hodinu log IO, VYPNOUT v produkci.",
                       isOn: $state.devLogging)
         }
 

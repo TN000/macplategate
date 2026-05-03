@@ -586,15 +586,7 @@ final class AppState: ObservableObject {
         }
     }
 
-    private static func appSupportSPZ() -> URL {
-        let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
-            ?? FileManager.default.homeDirectoryForCurrentUser
-        let dir = base.appendingPathComponent("SPZ", isDirectory: true)
-        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
-        try? FileManager.default.setAttributes(
-            [.posixPermissions: 0o700], ofItemAtPath: dir.path)
-        return dir
-    }
+    private static func appSupportSPZ() -> URL { AppPaths.baseDir }
 
     private let configURL: URL = {
         AppState.appSupportSPZ().appendingPathComponent("cameras.json")
